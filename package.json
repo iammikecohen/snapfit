@@ -1,0 +1,36 @@
+{
+  "name": "snapfit",
+  "version": "1.0.0",
+  "description": "",
+  "main": "snapfit.jscad",
+  "scripts": {
+    "start": "gulp",
+    "clean": "gulp clean",
+    "inject": "gulp inject",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "gulp vuepress && cross-env BASEPATH=/snapfit/ vuepress build",
+    "serve": "gulp vuepress && vuepress dev",
+    "stl": "openjscad snapfit.jscad -o dist/snapfit.stl"
+  },
+  "author": "Michael Cohen",
+  "license": "ISC",
+  "dependencies": {
+    "jscad-utils": "^3.0.0"
+  },
+  "devDependencies": {
+    "@jscad/web": "^1.10.0",
+    "@jwc/vue-openjscad": "^1.0.3",
+    "cross-env": "^5.2.0",
+    "del": "^3.0.0",
+    "gulp": "^4.0.0",
+    "gulp-cli": "^2.0.1",
+    "gulp-debug": "^4.0.0",
+    "gulp-inject": "^5.0.0",
+    "gulp-jscad-files": "^3.0.0",
+    "gulp-plumber": "^1.1.0",
+    "gulp-terser": "^1.1.6",
+    "gulp-watch": "^5.0.1",
+    "merge2": "^1.2.3",
+    "vuepress": "^0.14.8"
+  }
+}
