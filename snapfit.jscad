@@ -10,7 +10,7 @@ const defaultParams = {
   retractionAngle: 20,
   snapLength: 16,
   snapHeight: 4,
-  snapThickness: 7,
+  snapThickness: 2,
   snapWidth: 6
 };
 
@@ -18,45 +18,45 @@ function snapFit({
   entranceAngle,
   overhangDepth,
   retractionAngle,
-  snapLength,
   snapHeight,
   snapThickness,
   snapWidth
 } = defaultParams) {
-  const bTop = overhangDepth * Math.tan((entranceAngle * Math.PI) / 180);
-  const bBottom = overhangDepth * Math.tan((retractionAngle * Math.PI) / 180);
-  snapLength = snapHeight + bTop + bBottom;
+  // calculate length/height of entrance triangle and retraction triangle
+  const lengthTop = overhangDepth * Math.tan((entranceAngle * Math.PI) / 180);
+  const lengthBottom =
+    overhangDepth * Math.tan((retractionAngle * Math.PI) / 180);
+  const snapLength = snapHeight + lengthTop + lengthBottom;
+
   const base = cube([snapWidth, snapThickness, snapLength]).color("cadetblue");
-  let entranceCutout = cube([snapLength, snapThickness, snapLength])
-    .snap(base, "z", "outside-")
-    .snap(base, "x", "outside-");
-  let exitCutout = cube([snapWidth, snapThickness, snapWidth])
-    .snap(base, "z", "outside+")
-    .snap(base, "x", "outside-");
-  let snap = cube([overhangDepth, snapThickness, snapLength])
-    .snap(base, "x", "outside-")
+  let snap = cube([snapWidth, overhangDepth, snapLength])
+    .snap(base, "y", "outside-")
     .color("blue");
 
+  let entranceCutout = cube([snapWidth, snapWidth, snapLength])
+    .snap(base, "z", "outside-")
+    .snap(base, "y", "outside-");
+  let exitCutout = cube([snapWidth, snapWidth, snapWidth])
+    .snap(base, "z", "outside+")
+    .snap(base, "y", "outside-");
+
   entranceCutout = entranceCutout.rotate(
-    [snapWidth, 0, snapLength],
-    [0, 1, 0],
+    [0, snapThickness, snapLength],
+    [-1, 0, 0],
     entranceAngle
   );
-
   exitCutout = exitCutout.rotate(
-    [snapWidth, 0, 0],
-    [0, 1, 0],
+    [0, snapThickness, 0],
+    [-1, 0, 0],
     -retractionAngle
   );
   snap = difference(snap, union(entranceCutout, exitCutout));
-  let snapFit = union(base, snap).fillet(1, "z+");
-  snapFit = difference(snapFit, entranceCutout);
-  return coat(snapFit);
-}
 
-// ********************************************************
-// Other jscad libraries are injected here.  Do not remove.
-// Install jscad libraries using NPM
-// ********************************************************
-// include:js
-// endinject
+  let snapFit = union(base, snap);
+  snapFit.properties.baseConnection = new CSG.Connector(
+    [snapWidth / 2, 0, 0],
+    [0, 1, 0],
+    [0, 0, 1]
+  );
+  return snapFit;
+}
