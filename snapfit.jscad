@@ -4,16 +4,25 @@
 // file       : snapfit.jscad
 
 /* exported main */
-const entranceAngle = 40;
-const retractionAngle = 20;
-const snapHeight = 4;
+const defaultParams = {
+  entranceAngle: 40,
+  overhangDepth: 3,
+  retractionAngle: 20,
+  snapLength: 16,
+  snapHeight: 4,
+  snapThickness: 7,
+  snapWidth: 6
+};
 
-const snapThickness = 7;
-const snapWidth = 6;
-let snapLength = 16;
-const overhangDepth = 3;
-
-function snapFit(params) {
+function snapFit({
+  entranceAngle,
+  overhangDepth,
+  retractionAngle,
+  snapLength,
+  snapHeight,
+  snapThickness,
+  snapWidth
+} = defaultParams) {
   const bTop = overhangDepth * Math.tan((entranceAngle * Math.PI) / 180);
   const bBottom = overhangDepth * Math.tan((retractionAngle * Math.PI) / 180);
   snapLength = snapHeight + bTop + bBottom;
